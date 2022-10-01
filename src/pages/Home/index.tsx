@@ -78,6 +78,7 @@ export function Home() {
 
   const cycleActive = cycles.find((cycle) => cycle.id === cycleActiveId)
   const totalSeconds = cycleActive ? cycleActive.minutesAmount * 60 : 0
+
   useEffect(() => {
     let interval: number
 
@@ -99,6 +100,7 @@ export function Home() {
           )
           setAmountSecondsPassed(totalSeconds)
           clearInterval(interval)
+          setCycleActiveId(null)
         } else {
           setAmountSecondsPassed(secondsDifference)
         }
@@ -122,8 +124,10 @@ export function Home() {
   useEffect(() => {
     if (cycleActive) {
       document.title = `${minutes}:${seconds}`
+    } else {
+      document.title = 'Pomodoro Counter - Ignite'
     }
-  }, [minutes, seconds])
+  }, [minutes, seconds, cycleActive])
 
   const task = watch('task')
   const disableSubmitButton = !task
