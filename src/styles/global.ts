@@ -25,4 +25,15 @@ export const GlobalStyle = createGlobalStyle`
         background-color: ${(props) => props.theme['gray-900']};
         color: ${(props) => props.theme.white};
     }
+
+    @media (max-width: 420px) {
+        html{
+            font-size: 87.5%;
+        }
+  }
+    @media (max-width: 360px) {
+        html{
+            font-size: 75%;
+        }
+  }
 `
