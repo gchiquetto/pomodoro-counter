@@ -20,9 +20,12 @@ export function History() {
           </thead>
           <tbody>
             {cycles.map((cycle) => {
-              const dateDistance = formatDistanceToNow(cycle.startDate, {
-                addSuffix: true,
-              })
+              const dateDistance = formatDistanceToNow(
+                new Date(cycle.startDate),
+                {
+                  addSuffix: true,
+                },
+              )
               const dateFormatted =
                 dateDistance.charAt(0).toUpperCase() + dateDistance.slice(1)
 

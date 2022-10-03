@@ -1,17 +1,24 @@
-import { createContext, ReactNode, useReducer, useState } from 'react'
+import { differenceInSeconds } from 'date-fns'
+import {
+  createContext,
+  ReactNode,
+  useEffect,
+  useReducer,
+  useState,
+} from 'react'
+import { json } from 'react-router-dom'
+import {
+  ActionTypes,
+  addNewCycleAction,
+  markCycleAsFinishedAction,
+  setCycleActiveIdAsNull,
+  stopCycleAction,
+} from '../reducers/cycles/actions'
+import { Cycle, cyclesReducer } from '../reducers/cycles/reducer'
 
 interface CreateCycleData {
   task: string
   minutesAmount: number
-}
-
-interface Cycle {
-  id: string
-  task: string
-  minutesAmount: number
-  startDate: Date
-  stopedDate?: Date
-  finishedDate?: Date
 }
 
 interface CyclesContextType {
@@ -31,72 +38,48 @@ interface CyclesContextProviderProps {
   children: ReactNode
 }
 
-interface CyclesSate {
-  cycles: Cycle[]
-  cycleActiveId: string | null
-}
-
 export function CyclesContextProvider({
   children,
 }: CyclesContextProviderProps) {
-  // const [cycles, setCycles] = useState<Cycle[]>([])
   const [cyclesState, dispatch] = useReducer(
-    (state: CyclesSate, action: any) => {
-      switch (action.type) {
-        case 'ADD_NEW_CYCLE':
-          return {
-            ...state,
-            cycles: [...state.cycles, action.payload.newCycle],
-            cycleActiveId: action.payload.newCycle.id,
-          }
-        case 'STOP_CYCLE':
-          return {
-            ...state,
-            cycles: state.cycles.map((cycle) => {
-              if (cycle.id === state.cycleActiveId) {
-                return { ...cycle, stopedDate: new Date() }
-              } else {
-                return cycle
-              }
-            }),
-            cycleActiveId: null,
-          }
-        case 'MARK_CYCLE_AS_FINISHED':
-          return {
-            ...state,
-            cycles: state.cycles.map((cycle) => {
-              if (cycle.id === state.cycleActiveId) {
-                return { ...cycle, finishedDate: new Date() }
-              } else {
-                return cycle
-              }
-            }),
-            cycleActiveId: null,
-          }
-        case 'SET_CYCLE_ACTIVE_ID_AS_NULL':
-          return {
-            ...state,
-            cycles: [...state.cycles],
-            cycleActiveId: action.payload,
-          }
-        default:
-          return state
+    cyclesReducer,
+    {
+      cycles: [],
+      cycleActiveId: null,
+    },
+    () => {
+      const storedStateAsJSON = localStorage.getItem(
+        '@pomodoro-counter-ignite:cycles-state-1.0.0',
+      )
+      if (storedStateAsJSON) {
+        return JSON.parse(storedStateAsJSON)
       }
     },
-    { cycles: [], cycleActiveId: null },
   )
-
-  const [amountSecondsPassed, setAmountSecondsPassed] = useState(0)
 
   const { cycles, cycleActiveId } = cyclesState
 
   const cycleActive = cycles.find((cycle) => cycle.id === cycleActiveId)
 
+  const [amountSecondsPassed, setAmountSecondsPassed] = useState(() => {
+    if (cycleActive) {
+      return differenceInSeconds(new Date(), new Date(cycleActive.startDate))
+    }
+
+    return 0
+  })
+
+  useEffect(() => {
+    const stateJSON = JSON.stringify(cyclesState)
+
+    localStorage.setItem(
+      '@pomodoro-counter-ignite:cycles-state-1.0.0',
+      stateJSON,
+    )
+  }, [cyclesState])
+
   function markCycleAsFinished() {
-    dispatch({
-      type: 'MARK_CYCLE_AS_FINISHED',
-      payload: { cycleActiveId },
-    })
+    dispatch(markCycleAsFinishedAction(cycleActiveId))
   }
 
   function createNewCycle(data: CreateCycleData) {
@@ -107,20 +90,13 @@ export function CyclesContextProvider({
       minutesAmount: data.minutesAmount,
       startDate: new Date(),
     }
-    dispatch({
-      type: 'ADD_NEW_CYCLE',
-      payload: { newCycle },
-    })
+    dispatch(addNewCycleAction(newCycle))
 
     setAmountSecondsPassed(0)
-    // reset()
   }
 
   function stopCycle() {
-    dispatch({
-      type: 'STOP_CYCLE',
-      payload: null,
-    })
+    dispatch(stopCycleAction())
   }
 
   function setSecondsPassed(seconds: number) {
@@ -128,10 +104,7 @@ export function CyclesContextProvider({
   }
 
   function setActiveIdAsNull() {
-    dispatch({
-      type: 'SET_CYCLE_ACTIVE_ID_AS_NULL',
-      payload: { cycleActiveId },
-    })
+    dispatch(setCycleActiveIdAsNull(cycleActiveId))
   }
 
   return (
