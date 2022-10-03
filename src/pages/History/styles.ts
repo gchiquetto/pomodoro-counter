@@ -3,21 +3,26 @@ import styled from 'styled-components'
 export const HistoryContainer = styled.div`
   flex: 1;
   display: flex;
+  gap: 1rem;
   flex-direction: column;
   justify-content: center;
   padding: 3.5rem;
+  height: 100%;
+  overflow-y: hidden;
 
   h1 {
     font-size: 1.5rem;
     color: ${(props) => props.theme['gray-100']};
+  }
+
+  @media (max-width: 768px) {
+    padding: 2rem;
   }
 `
 
 export const HistoryTable = styled.div`
   flex: 1;
   overflow: auto;
-  margin: 2rem;
-
   table {
     width: 100%;
     border-collapse: collapse;
@@ -58,6 +63,24 @@ export const HistoryTable = styled.div`
         padding-right: 1.5rem;
       }
     }
+  }
+
+  &::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  &::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+  }
+
+  &::-webkit-scrollbar-corner {
+    background-color: transparent;
   }
 `
 
