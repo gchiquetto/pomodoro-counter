@@ -19,7 +19,7 @@
 
 <p float="left" align="center">
     <img alt="Pomodoro Timer - Home/Timer Page - Github Repo" src="https://res.cloudinary.com/dxetg4hmh/image/upload/v1664800259/Readme-imgs/pomodoro-home_xxfszc.png" width="400"/>
-    <img alt=""Pomodoro Timer - Home/Timer Page - Counter running - Github Repo" src="https://res.cloudinary.com/dxetg4hmh/image/upload/v1664800259/Readme-imgs/pomodoro-home-countdown-running_iqcbyr.png" width="400" />
+    <img alt="Pomodoro Timer - Home/Timer Page - Counter running - Github Repo" src="https://res.cloudinary.com/dxetg4hmh/image/upload/v1664800259/Readme-imgs/pomodoro-home-countdown-running_iqcbyr.png" width="400" />
 </p>
 <p float="left" align="center">
     <img alt="Pomodoro Timer - History Page - Github Repo" src="https://res.cloudinary.com/dxetg4hmh/image/upload/v1664800259/Readme-imgs/pomodoro-history_ndflx7.png"  width="800"/>
